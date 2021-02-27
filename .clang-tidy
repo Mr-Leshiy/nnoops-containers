@@ -1,0 +1,5 @@
+---
+Checks:          '-*,performance-*,clang-analyzer-*,portability-*,cert-*,concurrency-*,boost-*'
+WarningsAsErrors: '*'
+AnalyzeTemporaryDtors: false
+FormatStyle:     file

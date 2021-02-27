@@ -1,0 +1,1 @@
+addtest(binary_search_tree_test binary_search_tree_test.cpp)

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(LIB_NAME value_sorted_map)
+set(LIB_NAME nnoops-containers)
 set(VERSION 0.1)
 
 
