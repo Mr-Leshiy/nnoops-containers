@@ -1,24 +1,42 @@
-# Download and unpack googletest at configure time
-configure_file(gtest_CMakeLists.txt.in googletest-download/CMakeLists.txt)
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-        RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-    message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-endif()
-execute_process(COMMAND ${CMAKE_COMMAND} --build .
-        RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-    message(FATAL_ERROR "Build step for googletest failed: ${result}")
-endif()
+find_package(GTest CONFIG REQUIRED)
 
-# Prevent overriding the parent project's compiler/linker
-# settings on Windows
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# Add googletest directly to our build. This defines
-# the gtest and gtest_main targets.
-add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-        ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
-        EXCLUDE_FROM_ALL)
+function(addtest test_name)
+    set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+    find_package(Threads REQUIRED)
+
+    add_executable(${test_name} ${ARGN})
+    addtest_part(${test_name} ${ARGN})
+    target_link_libraries(${test_name}
+            GTest::gmock
+            GTest::gtest 
+            GTest::gmock_main 
+            GTest::gtest_main
+            Threads::Threads
+            )
+    add_test(
+            NAME ${test_name}
+            COMMAND $<TARGET_FILE:${test_name}>
+    )
+    set_target_properties(${test_name} PROPERTIES
+            CXX_STANDARD 17
+            CXX_STANDARD_REQUIRED TRUE
+            )
+    disable_clang_tidy(${test_name})
+    if(UNIX)
+        # works only on UNIX systems
+        target_compile_options(${test_name} PUBLIC
+                # we don't care about potential null dereferences in tests
+                -Wno-null-dereference
+                )
+    endif()
+endfunction()
+
+function(addtest_part test_name)
+    if (POLICY CMP0076)
+        cmake_policy(SET CMP0076 NEW)
+    endif ()
+    target_sources(${test_name} PUBLIC
+            ${ARGN}
+            )
+endfunction()

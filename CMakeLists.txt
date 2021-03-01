@@ -34,7 +34,6 @@ include(cmake/gtest.cmake)
 enable_testing()
 add_subdirectory(test)
 
-
 if(CLANG_TIDY)
     include(cmake/clang-tidy.cmake)
 endif()
