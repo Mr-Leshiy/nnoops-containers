@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.5)
 set(LIB_NAME nnoops-containers)
 set(VERSION 0.1)
 
-
 project(${LIB_NAME} VERSION ${VERSION} LANGUAGES C CXX)
 
 include(GNUInstallDirs)
@@ -29,6 +28,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 include_directories(src)
+
+vcpkg_install(gtest)
 
 include(cmake/gtest.cmake)
 enable_testing()
