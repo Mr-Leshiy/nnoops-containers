@@ -48,8 +48,12 @@ struct BinarySearchTree {
   BinarySearchTree(std::function<bool(const int& val1, const int& val2)> cmp)
       : cmp_(cmp) {}
 
+  const node_t* next(const node_t* node) { return _next(node); }
+
+  const node_t* prev(const node_t* node) { return _prev(node); }
+
   const node_t* find(const T& key) const {
-    auto* walk_node = root_;
+    node_t* walk_node = root_;
     while (walk_node != nullptr) {
       if (walk_node->key_ == key) {
         return walk_node;
@@ -64,15 +68,13 @@ struct BinarySearchTree {
   }
 
   const node_t* insert(const T& key) {
-    ++size_;
-
     if (root_ == nullptr) {
       root_ = new node_t{key, nullptr, nullptr, nullptr};
       return root_;
     }
 
-    auto* walk_node = root_;
-    auto* new_node = new node_t{key, nullptr, nullptr, nullptr};
+    node_t* walk_node = root_;
+    node_t* new_node = new node_t{key, nullptr, nullptr, nullptr};
 
     while (walk_node != nullptr) {
       if (cmp_(walk_node->key_, key)) {
@@ -97,10 +99,105 @@ struct BinarySearchTree {
     return new_node;
   }
 
+  const node_t* erase(const node_t* node) {
+    node_t* next = _next(node);
+    node_t* parent = node->parent_;
+
+    // first case
+    if (node->left_ == nullptr && node->right_ == nullptr) {
+      if (node == root_) {
+        delete node;
+        return next;
+      }
+      if (parent->left_ == node) {
+        parent->left_ = nullptr;
+      }
+      if (parent->right_ == node) {
+        parent->right_ = nullptr;
+      }
+      delete node;
+      return next;
+    }
+
+    // second case
+    if (node->left_ == nullptr) {
+      if (parent->left_ == node) {
+        parent->left_ = node->right_;
+        delete node;
+        return next;
+      }
+      if (parent->right_ == node) {
+        parent->right_ = node->right_;
+        delete node;
+        return next;
+      }
+    }
+    //
+    if (node->right_ == nullptr) {
+      if (parent->left_ == node) {
+        parent->left_ = node->left_;
+        delete node;
+        return next;
+      }
+      if (parent->right_ == node) {
+        parent->right_ = node->left_;
+        delete node;
+        return next;
+      }
+    }
+
+    // third case
+
+    next->left_ = node->left_;
+    if (parent->left_ == node) {
+      parent->left_ = next;
+    }
+    if (parent->right_ == node) {
+      parent->left_ = next;
+    }
+
+    delete node;
+    return next;
+  }
+
+  void clear() {
+    auto* walk_node = minimum(root_);
+    while (walk_node != nullptr) {
+      walk_node = erase(walk_node);
+    }
+  }
+
  private:
+  node_t* _next(const node_t* node) {
+    if (node->right_ != nullptr) {
+      return minimum(node->right_);
+    }
+
+    auto* walk_node1 = node->parent_;
+    auto* walk_node2 = node;
+    while (walk_node1 != nullptr && walk_node1->right_ == walk_node2) {
+      walk_node2 = walk_node1;
+      walk_node1 = walk_node1->parent_;
+    }
+    return walk_node1;
+  }
+
+  node_t* _prev(const node_t* node) {
+    if (node->left_ != nullptr) {
+      return maximum(node->left_);
+    }
+
+    auto* walk_node1 = node->parent_;
+    auto* walk_node2 = node;
+    while (walk_node1 != nullptr && walk_node1->left_ == walk_node2) {
+      walk_node2 = walk_node1;
+      walk_node1 = walk_node1->parent_;
+    }
+    return walk_node1;
+  }
+
   BinarySearchTreeNode<T>* root_{nullptr};
   std::function<bool(const T& val1, const T& val2)> cmp_{};
-  size_t size_;
 };
 
 }  // namespace nnoops
