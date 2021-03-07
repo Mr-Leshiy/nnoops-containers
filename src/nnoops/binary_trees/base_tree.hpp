@@ -15,6 +15,7 @@ struct BaseTree {
   virtual const node_t* insert(const key_t& key) = 0;
   virtual const node_t* erase(const node_t* node) = 0;
   virtual void clear() = 0;
+  virtual size_t size() const = 0;
 };
 
 }  // namespace nnoops

@@ -4,9 +4,16 @@
 
 using namespace nnoops;
 
-TEST(BinarySearchTree, basic_test) {
-  BinarySearchTree<int> tree{
-      [](const int& val1, const int& val2) -> bool { return val1 < val2; }};
+TEST(BinarySearchTree, find_test) {
+  BinarySearchTree<int> tree{[](const int& val1, const int& val2) -> int {
+    if (val1 < val2) {
+      return 1;
+    }
+    if (val1 > val2) {
+      return -1;
+    }
+    return 0;
+  }};
 
   EXPECT_EQ(tree.find(10), nullptr);
 
@@ -47,9 +54,18 @@ TEST(BinarySearchTree, basic_test) {
   EXPECT_EQ(el, nullptr);
 }
 
+TEST(BinarySearchTree, erase_test) {}
+
 TEST(BinarySearchTree, next_prev_test) {
-  BinarySearchTree<int> tree{
-      [](const int& val1, const int& val2) -> bool { return val1 < val2; }};
+  BinarySearchTree<int> tree{[](const int& val1, const int& val2) -> int {
+    if (val1 < val2) {
+      return 1;
+    }
+    if (val1 > val2) {
+      return -1;
+    }
+    return 0;
+  }};
 
   tree.insert(1);
   tree.insert(3);
