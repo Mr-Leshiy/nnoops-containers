@@ -14,32 +14,6 @@ struct BinarySearchTreeNode {
 };
 
 template <typename T>
-BinarySearchTreeNode<T>* minimum(BinarySearchTreeNode<T>* node) {
-  auto* walk_node = node;
-  if (walk_node == nullptr) {
-    return nullptr;
-  }
-
-  while (walk_node->left_ != nullptr) {
-    walk_node = walk_node->left_;
-  }
-  return walk_node;
-}
-
-template <typename T>
-BinarySearchTreeNode<T>* maximum(BinarySearchTreeNode<T>* node) {
-  auto* walk_node = node;
-  if (walk_node == nullptr) {
-    return nullptr;
-  }
-
-  while (walk_node->right_ != nullptr) {
-    walk_node = walk_node->right_;
-  }
-  return walk_node;
-}
-
-template <typename T>
 struct BinarySearchTree {
   using node_t = BinarySearchTreeNode<T>;
 
@@ -160,14 +134,31 @@ struct BinarySearchTree {
     return next;
   }
 
-  void clear() {
-    auto* walk_node = minimum(root_);
-    while (walk_node != nullptr) {
-      walk_node = erase(walk_node);
+ private:
+  node_t* minimum(node_t* node) {
+    auto* walk_node = node;
+    if (walk_node == nullptr) {
+      return nullptr;
     }
+
+    while (walk_node->left_ != nullptr) {
+      walk_node = walk_node->left_;
+    }
+    return walk_node;
   }
 
- private:
+  node_t* maximum(node_t* node) {
+    auto* walk_node = node;
+    if (walk_node == nullptr) {
+      return nullptr;
+    }
+
+    while (walk_node->right_ != nullptr) {
+      walk_node = walk_node->right_;
+    }
+    return walk_node;
+  }
+
   node_t* _next(const node_t* node) {
     if (node->right_ != nullptr) {
       return minimum(node->right_);
@@ -196,7 +187,7 @@ struct BinarySearchTree {
     return walk_node1;
   }
 
-  BinarySearchTreeNode<T>* root_{nullptr};
+  node_t* root_{nullptr};
   std::function<bool(const T& val1, const T& val2)> cmp_{};
 };
 
