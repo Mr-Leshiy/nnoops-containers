@@ -17,7 +17,7 @@ template <typename T>
 struct BinarySearchTree {
   using node_t = BinarySearchTreeNode<T>;
 
-  ~BinarySearchTree() = default;
+  ~BinarySearchTree() { clear(); };
 
   BinarySearchTree(std::function<bool(const int& val1, const int& val2)> cmp)
       : cmp_(cmp) {}
@@ -42,13 +42,14 @@ struct BinarySearchTree {
   }
 
   const node_t* insert(const T& key) {
+    node_t* new_node = new node_t{key, nullptr, nullptr, nullptr};
+
     if (root_ == nullptr) {
-      root_ = new node_t{key, nullptr, nullptr, nullptr};
+      root_ = new_node;
       return root_;
     }
 
     node_t* walk_node = root_;
-    node_t* new_node = new node_t{key, nullptr, nullptr, nullptr};
 
     while (walk_node != nullptr) {
       if (cmp_(walk_node->key_, key)) {
@@ -95,6 +96,11 @@ struct BinarySearchTree {
 
     // second case
     if (node->left_ == nullptr) {
+      if (node == root_) {
+        root_ = node->right_;
+        delete node;
+        return next;
+      }
       if (parent->left_ == node) {
         parent->left_ = node->right_;
         delete node;
@@ -108,6 +114,11 @@ struct BinarySearchTree {
     }
     //
     if (node->right_ == nullptr) {
+      if (node == root_) {
+        root_ = node->left_;
+        delete node;
+        return next;
+      }
       if (parent->left_ == node) {
         parent->left_ = node->left_;
         delete node;
@@ -123,6 +134,11 @@ struct BinarySearchTree {
     // third case
 
     next->left_ = node->left_;
+    if (node == root_) {
+      root_ = next;
+      delete node;
+      return next;
+    }
     if (parent->left_ == node) {
       parent->left_ = next;
     }
@@ -132,6 +148,13 @@ struct BinarySearchTree {
 
     delete node;
     return next;
+  }
+
+  void clear() {
+    const auto* walk_node = minimum(root_);
+    while (walk_node != nullptr) {
+      walk_node = erase(walk_node);
+    }
   }
 
  private:

@@ -66,46 +66,57 @@ TEST(BinarySearchTree, next_prev_test) {
   const auto* node = tree.find(1);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 1);
+  ASSERT_TRUE(node->parent_ == nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 2);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 3);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 4);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 5);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 6);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 7);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 8);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 10);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 13);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.next(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 14);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   auto* last = node;
 
@@ -115,44 +126,55 @@ TEST(BinarySearchTree, next_prev_test) {
   node = last;
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 14);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 13);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 10);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 8);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 7);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 6);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 5);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 4);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 3);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 2);
+  ASSERT_TRUE(node->parent_ != nullptr);
 
   node = tree.prev(node);
   ASSERT_TRUE(node != nullptr);
   ASSERT_EQ(node->key_, 1);
+  ASSERT_TRUE(node->parent_ == nullptr);
 }
