@@ -22,6 +22,7 @@ struct BinarySearchTreeNode {
 template <typename T>
 struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
   using node_t = BinarySearchTreeNode<T>;
+  using key_t = T;
 
   ~BinarySearchTree() override { clear(); };
 
@@ -32,7 +33,7 @@ struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
 
   const node_t* prev(const node_t* node) override { return _prev(node); }
 
-  const node_t* find(const T& key) const override {
+  const node_t* find(const key_t& key) const override {
     node_t* walk_node = root_;
     while (walk_node != nullptr) {
       int res = cmp_(key, walk_node->key_);
@@ -49,7 +50,7 @@ struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
     return nullptr;
   }
 
-  const node_t* insert(const T& key) override {
+  const node_t* insert(const key_t& key) override {
     if (root_ == nullptr) {
       ++size_;
       root_ = new node_t{key, nullptr, nullptr, nullptr};
@@ -86,13 +87,20 @@ struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
     return nullptr;
   }
 
+  const node_t* erase(const key_t& key) override { return erase(find(key)); }
+
   const node_t* erase(const node_t* node) override {
+    if (node == nullptr) {
+      return nullptr;
+    }
+
     node_t* next = _next(node);
     node_t* parent = node->parent_;
 
     // first case
     if (node->left_ == nullptr && node->right_ == nullptr) {
       if (node == root_) {
+        root_ = nullptr;
         --size_;
         delete node;
         return next;
@@ -112,18 +120,21 @@ struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
     if (node->left_ == nullptr) {
       if (node == root_) {
         root_ = node->right_;
+        root_->parent_ = nullptr;
         --size_;
         delete node;
         return next;
       }
       if (parent->left_ == node) {
         parent->left_ = node->right_;
+        parent->left_->parent_ = parent;
         --size_;
         delete node;
         return next;
       }
       if (parent->right_ == node) {
         parent->right_ = node->right_;
+        parent->right_->parent_ = parent;
         --size_;
         delete node;
         return next;
@@ -133,18 +144,21 @@ struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
     if (node->right_ == nullptr) {
       if (node == root_) {
         root_ = node->left_;
+        root_->parent_ = nullptr;
         --size_;
         delete node;
         return next;
       }
       if (parent->left_ == node) {
         parent->left_ = node->left_;
+        parent->left_->parent_ = parent;
         --size_;
         delete node;
         return next;
       }
       if (parent->right_ == node) {
         parent->right_ = node->left_;
+        parent->right_->parent_ = parent;
         --size_;
         delete node;
         return next;
@@ -152,19 +166,23 @@ struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
     }
 
     // third case
-
+    assert(next->left_ == nullptr);
     next->left_ = node->left_;
+    node->left_->parent_ = next;
     if (node == root_) {
       root_ = next;
+      root_->parent_ = nullptr;
       --size_;
       delete node;
       return next;
     }
     if (parent->left_ == node) {
+      next->parent_ = parent;
       parent->left_ = next;
     }
     if (parent->right_ == node) {
-      parent->left_ = next;
+      next->parent_ = parent;
+      parent->right_ = next;
     }
 
     --size_;
@@ -240,7 +258,7 @@ struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
 
   node_t* root_{nullptr};
   // 0 = equals, positive = val1 < val2, negative = val1 > val2
-  std::function<int(const T& val1, const T& val2)> cmp_{};
+  std::function<int(const key_t& val1, const key_t& val2)> cmp_{};
   size_t size_{0};
 };
 
