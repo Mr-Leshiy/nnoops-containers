@@ -3,10 +3,14 @@
 
 #include <functional>
 
+#include "nnoops/binary_trees/base_tree.hpp"
+
 namespace nnoops {
 
 template <typename T>
 struct BinarySearchTreeNode {
+  using key_t = T;
+
   T key_{};
   BinarySearchTreeNode* left_{nullptr};
   BinarySearchTreeNode* right_{nullptr};
@@ -14,19 +18,19 @@ struct BinarySearchTreeNode {
 };
 
 template <typename T>
-struct BinarySearchTree {
+struct BinarySearchTree : public BaseTree<BinarySearchTreeNode<T>> {
   using node_t = BinarySearchTreeNode<T>;
 
-  ~BinarySearchTree() { clear(); };
+  ~BinarySearchTree() override { clear(); };
 
   BinarySearchTree(std::function<bool(const int& val1, const int& val2)> cmp)
       : cmp_(cmp) {}
 
-  const node_t* next(const node_t* node) { return _next(node); }
+  const node_t* next(const node_t* node) override { return _next(node); }
 
-  const node_t* prev(const node_t* node) { return _prev(node); }
+  const node_t* prev(const node_t* node) override { return _prev(node); }
 
-  const node_t* find(const T& key) const {
+  const node_t* find(const T& key) const override {
     node_t* walk_node = root_;
     while (walk_node != nullptr) {
       if (walk_node->key_ == key) {
@@ -41,7 +45,7 @@ struct BinarySearchTree {
     return nullptr;
   }
 
-  const node_t* insert(const T& key) {
+  const node_t* insert(const T& key) override {
     node_t* new_node = new node_t{key, nullptr, nullptr, nullptr};
 
     if (root_ == nullptr) {
@@ -74,7 +78,7 @@ struct BinarySearchTree {
     return new_node;
   }
 
-  const node_t* erase(const node_t* node) {
+  const node_t* erase(const node_t* node) override {
     node_t* next = _next(node);
     node_t* parent = node->parent_;
 
@@ -150,7 +154,7 @@ struct BinarySearchTree {
     return next;
   }
 
-  void clear() {
+  void clear() override {
     const auto* walk_node = minimum(root_);
     while (walk_node != nullptr) {
       walk_node = erase(walk_node);
