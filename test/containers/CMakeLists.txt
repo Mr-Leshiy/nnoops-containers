@@ -1,0 +1,1 @@
+addtest(map_test map_test.cpp)
