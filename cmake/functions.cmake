@@ -42,10 +42,3 @@ function(disable_clang_tidy target)
             CXX_CLANG_TIDY ""
             )
 endfunction()
-
-function(vcpkg_install package)
-    find_program(VCPKG_FOUND ccache)
-    if(VCPKG_FOUND)
-        execute_process(COMMAND vcpkg install ${package})
-    endif(VCPKG_FOUND)
-endfunction()
