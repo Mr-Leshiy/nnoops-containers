@@ -5,4 +5,14 @@
 
 using namespace nnoops;
 
-TEST(Map, base_test) {}
+auto cmp = [](const int& val1, const int& val2) -> int {
+  if (val1 < val2) {
+    return 1;
+  }
+  if (val1 > val2) {
+    return -1;
+  }
+  return 0;
+};
+
+TEST(Map, base_test) { Map<int, BinarySearchTree> map{cmp}; }

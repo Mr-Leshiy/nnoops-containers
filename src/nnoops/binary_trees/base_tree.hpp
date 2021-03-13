@@ -9,8 +9,6 @@ struct BaseTree {
 
   virtual ~BaseTree() = default;
 
-  virtual node_t* prev(node_t* node) = 0;
-  virtual node_t* next(node_t* node) = 0;
   virtual node_t* find(const key_t& key) = 0;
   virtual node_t* insert(const key_t& key) = 0;
   virtual node_t* erase(const key_t& key) = 0;
