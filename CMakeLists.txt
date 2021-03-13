@@ -29,8 +29,6 @@ endif()
 
 include_directories(src)
 
-vcpkg_install(gtest)
-
 include(cmake/gtest.cmake)
 enable_testing()
 add_subdirectory(test)
